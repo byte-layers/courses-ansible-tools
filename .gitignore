@@ -1,0 +1,6 @@
+atelier/
+.DS_Store
+*.retry
+.env
+ansible-navigator.log
+*-artifact-*.json

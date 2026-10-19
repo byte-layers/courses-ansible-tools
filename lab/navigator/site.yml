@@ -1,0 +1,9 @@
+# Playbook de démonstration pour ansible-navigator : une seule tâche, sur la machine locale.
+- name: Démo navigator
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Dire bonjour
+      ansible.builtin.debug:
+        msg: "Bonjour depuis ansible-navigator"

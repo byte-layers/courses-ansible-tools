@@ -1,0 +1,5 @@
+# Configuration git système montée dans le conteneur de Semaphore (/etc/gitconfig).
+# Sous Linux, le dépôt monté appartient à votre utilisateur, pas à celui du conteneur :
+# sans cette ligne, git refuse de le cloner (« detected dubious ownership »).
+[safe]
+	directory = *

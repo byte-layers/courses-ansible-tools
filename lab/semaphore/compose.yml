@@ -1,0 +1,41 @@
+# Semaphore UI et sa base : la solution de référence du chapitre 4.
+# Validé avec Docker 28, Compose v2 et semaphoreui/semaphore v2.19.16.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: semaphore
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-semaphore_pw}
+      POSTGRES_DB: semaphore
+    volumes:
+      - semaphore_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U semaphore"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  semaphore:
+    image: semaphoreui/semaphore:v2.19.16   # version épinglée, jamais :latest
+    ports:
+      - "127.0.0.1:28030:3000"              # UI liée à la boucle locale : pas exposée sur le réseau
+    volumes:
+      - ./demo-repo:/repos/demo-repo:ro     # le dépôt surveillé, monté en lecture seule
+      - ./gitconfig:/etc/gitconfig:ro       # autorise git à lire ce dépôt (propriétaire différent sous Linux)
+    environment:
+      SEMAPHORE_DB_DIALECT: postgres
+      SEMAPHORE_DB_HOST: postgres
+      SEMAPHORE_DB_PORT: 5432
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: ${DB_PASSWORD:-semaphore_pw}
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_ADMIN: admin                 # compte admin créé au premier démarrage
+      SEMAPHORE_ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+      SEMAPHORE_ADMIN_NAME: Admin
+      SEMAPHORE_ADMIN_EMAIL: admin@example.com
+    depends_on:
+      postgres:
+        condition: service_healthy           # attendre que la base accepte les connexions
+
+volumes:
+  semaphore_db:

@@ -1,0 +1,12 @@
+# Le playbook « surveillé » par Semaphore : volontairement trivial.
+# Il prouve que le contrôleur tire le dépôt et rejoue le playbook.
+- name: Réconciliation (pull GitOps)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Écrire un marqueur d'exécution
+      ansible.builtin.copy:
+        content: "réconcilié par Semaphore\n"
+        dest: /tmp/gitops-reconcile.txt
+        mode: "0644"
