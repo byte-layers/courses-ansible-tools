@@ -1,0 +1,19 @@
+# Une instance Ascender, décrite pour l'opérateur : la solution de référence du chapitre 5.
+# L'opérateur d'Ascender reprend les ressources de l'opérateur AWX (groupe awx.ansible.com, kind AWX).
+# Validé sur minikube 1.37 (Kubernetes 1.34), opérateur et Ascender 25.6.2, Mac arm64 et amd64.
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: ascender
+  namespace: ascender
+spec:
+  image: ghcr.io/ctrliq/ascender
+  image_version: "25.6.2"                   # épinglée : sinon l'opérateur prend latest
+  control_plane_ee_image: ghcr.io/ctrliq/ascender-ee:25.6.2
+  ee_images:
+    - name: Ascender EE (25.6.2)
+      image: ghcr.io/ctrliq/ascender-ee:25.6.2
+  # L'image PostgreSQL par défaut (postgresql-18-c9s) n'existe qu'en amd64 :
+  # celle-ci existe aussi en arm64 (Mac Apple Silicon).
+  postgres_image: quay.io/sclorg/postgresql-15-c9s
+  postgres_image_version: "20261014"        # épinglée, comme les autres images

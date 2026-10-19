@@ -1,16 +1,16 @@
 ---
 title: "Ansible — outils de gestion et d'exécution"
-description: "Du terminal à la plateforme : ansible-navigator et les execution environments, ansible-pull, Semaphore UI, puis AWX, AAP et Ascender"
+description: "Du terminal à la plateforme : ansible-navigator et les execution environments, ansible-pull, Semaphore UI, AWX, AAP et Ascender, Event-Driven Ansible, et comment choisir"
 tags:
   - ansible
   - devops
   - lab
 difficulty: intermediate
-duration: 240
+duration: 330
 introTitle: "Présentation"
 requires: "0.1.0"
 options:
-  allowManualProgress: false
+  allowManualProgress: true
   autoCompleteOnNext: unverifiable
 ---
 
@@ -38,6 +38,7 @@ Si un de ces points vous manque, le cours « Ansible — premiers pas » couvre 
 | Python | **3.12** ou plus récent | ansible-navigator s'installe dans un environnement Python |
 | git | n'importe quelle version récente | les outils du cours tirent leur configuration d'un dépôt git |
 | `curl` | n'importe quelle version | tester les API |
+| minikube, kubectl, helm | facultatif, pour le cas pratique du chapitre 5 | déployer Ascender sur un cluster local ; il faut alors **8 Go** de mémoire pour Docker |
 
 ## Le parcours
 
@@ -49,9 +50,9 @@ Si un de ces points vous manque, le cours « Ansible — premiers pas » couvre 
    d'une dérive.
 4. **Semaphore UI** : un contrôleur web léger, lancé en un `compose.yml`, avec projets,
    templates et plannings.
-
-Deux chapitres suivront dans une prochaine version : le paysage **AWX, Tower, AAP et Ascender**
-(avec Event-Driven Ansible), et **choisir son outil**.
+5. **AWX, Tower, AAP et Ascender** : la famille des plateformes, leur état aujourd'hui,
+   Event-Driven Ansible, et un cas pratique facultatif : Ascender sur minikube.
+6. **Choisir son outil** : une grille de décision, et des cas concrets à trancher.
 
 Les chapitres sont indépendants les uns des autres : chacun prépare ses propres fichiers dans
 `atelier/` et nettoie ses conteneurs à la fin. Les fichiers fournis et les solutions de référence
