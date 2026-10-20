@@ -59,8 +59,8 @@ Deux conséquences pratiques. D'abord, un **AWX en production** tourne aujourd'h
 figée depuis juillet 2024 : rien d'alarmant à court terme, mais plus aucun correctif ne sort, et la
 question de la suite se pose. Ensuite, Ascender en est la continuation libre la plus directe : même
 interface, mêmes objets, même API, et même opérateur Kubernetes ; l'installeur de CIQ propose même
-une [migration d'AWX vers Ascender](https://github.com/ctrliq/ascender-install). Le cas pratique de
-l'étape suivante vous le montre.
+une [migration d'AWX vers Ascender](https://github.com/ctrliq/ascender-install). Les deux cas
+pratiques du chapitre, AWX en Compose puis Ascender sur minikube, vous le montrent.
 
 ## Event-Driven Ansible
 
@@ -122,7 +122,7 @@ questions:
       - "Le nouveau nom d'AWX après la refonte"
     correct: 2
     explanation: |
-      Ascender est un fork d'AWX, maintenu par CIQ ; l'étape suivante montre qu'il en garde
+      Ascender est un fork d'AWX, maintenu par CIQ ; le cas pratique Ascender montre qu'il en garde
       jusqu'aux noms techniques.
   - prompt: Dans un rulebook EDA, que décrit la partie rules ?
     answers:

@@ -17,7 +17,8 @@ description: "Un cluster local, l'opérateur, une ressource AWX, puis un projet,
 > | Durée | 10 à 15 minutes d'installation, selon votre connexion |
 >
 > Si votre poste ne les remplit pas, lisez cette étape sans la faire : ses captures montrent ce que
-> vous verriez, et le quiz final ne demande pas de l'avoir réalisée.
+> vous verriez, et le quiz final ne demande pas de l'avoir réalisée. Le cas pratique précédent, AWX
+> en Docker Compose, en est l'alternative légère.
 
 Ce cas pratique manipule quelques notions de Kubernetes. Voici les seules dont vous aurez besoin :
 

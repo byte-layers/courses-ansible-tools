@@ -1,0 +1,142 @@
+# AWX 24.6.1 en Docker Compose, SANS Kubernetes : un montage NON OFFICIEL, pour apprendre.
+# Il reproduit ce que fait l'opérateur AWX dans ses deux pods (web et task), service par service.
+# Validé avec Docker 28, Compose v2, quay.io/ansible/awx:24.6.1, sur Mac arm64.
+# Ne l'utilisez pas en production : la seule installation supportée d'AWX est l'opérateur Kubernetes.
+# Ce qui est commun aux conteneurs AWX : l'image et les fichiers de configuration
+x-awx-common: &awx-common
+  image: quay.io/ansible/awx:24.6.1
+  environment: &awx-env
+    DATABASE_PASSWORD: ${DATABASE_PASSWORD:-awx_pw}
+    BROADCAST_WEBSOCKET_SECRET: ${BROADCAST_WEBSOCKET_SECRET:-change-me-broadcast-secret}
+  volumes: &awx-volumes
+    - ./config/settings.py:/etc/tower/settings.py:ro
+    - ./config/credentials.py:/etc/tower/conf.d/credentials.py:ro
+    - ./config/execution_environments.py:/etc/tower/conf.d/execution_environments.py:ro
+    - ./config/SECRET_KEY:/etc/tower/SECRET_KEY:ro
+    - redis_socket:/var/run/redis
+
+services:
+  # Rend les volumes partagés accessibles en écriture aux différents utilisateurs des conteneurs
+  perms:
+    image: busybox:1.37
+    command: sh -c "chmod 1777 /var/run/redis /var/run/receptor /var/lib/awx/projects /etc/receptor"
+    volumes:
+      - redis_socket:/var/run/redis
+      - receptor_socket:/var/run/receptor
+      - receptor_config:/etc/receptor
+      - projects:/var/lib/awx/projects
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: awx
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-awx_pw}
+      POSTGRES_DB: awx
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U awx"]
+      interval: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "/etc/redis.conf"]
+    volumes:
+      - ./config/redis.conf:/etc/redis.conf:ro
+      - redis_socket:/var/run/redis
+    depends_on:
+      perms: {condition: service_completed_successfully}
+
+  # Une seule fois : migrations du schéma, compte admin, EE et données de démonstration
+  init:
+    <<: *awx-common
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        awx-manage migrate --noinput
+        awx-manage shell -c "from django.contrib.auth.models import User; exit(0 if User.objects.filter(username='admin').exists() else 1)" \
+          || DJANGO_SUPERUSER_PASSWORD="$${ADMIN_PASSWORD:-changeme}" awx-manage createsuperuser --noinput --username admin --email admin@example.com
+        awx-manage register_default_execution_environments
+        # Organisation « Default » et objets de démonstration (Demo Project, Demo Job Template…)
+        awx-manage create_preload_data
+    environment:
+      <<: *awx-env
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  # L'interface et l'API (nginx, uwsgi, daphne), comme le pod « web » de l'opérateur
+  web:
+    <<: *awx-common
+    hostname: awx-web
+    command: /usr/bin/launch_awx_web.sh
+    ports:
+      - "127.0.0.1:28052:8052"
+    volumes:
+      - ./config/settings.py:/etc/tower/settings.py:ro
+      - ./config/credentials.py:/etc/tower/conf.d/credentials.py:ro
+      - ./config/execution_environments.py:/etc/tower/conf.d/execution_environments.py:ro
+      - ./config/SECRET_KEY:/etc/tower/SECRET_KEY:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - redis_socket:/var/run/redis
+    depends_on:
+      init: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+
+  # Le moteur : dispatcher, planificateur, réception des événements des jobs (pod « task »)
+  task:
+    <<: *awx-common
+    hostname: awx-task
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        wait-for-migrations
+        # Un nœud « hybrid » (contrôle + exécution), nommé comme le receptor
+        awx-manage provision_instance --hostname=awx-task --node_type=hybrid
+        awx-manage register_queue --queuename=controlplane --hostnames=awx-task
+        awx-manage register_queue --queuename=default --hostnames=awx-task
+        exec supervisord -c /etc/supervisord_task.conf
+    environment:
+      <<: *awx-env
+      AWX_SKIP_MIGRATIONS: "1"
+    volumes:
+      - ./config/settings.py:/etc/tower/settings.py:ro
+      - ./config/credentials.py:/etc/tower/conf.d/credentials.py:ro
+      - ./config/execution_environments.py:/etc/tower/conf.d/execution_environments.py:ro
+      - ./config/SECRET_KEY:/etc/tower/SECRET_KEY:ro
+      - receptor_config:/etc/receptor
+      - redis_socket:/var/run/redis
+      - receptor_socket:/var/run/receptor
+      - projects:/var/lib/awx/projects
+    depends_on:
+      init: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+      receptor: {condition: service_started}
+
+  # Le receptor, qui exécute les jobs avec ansible-runner et podman (conteneur « ee » du pod task)
+  receptor:
+    build: ./receptor
+    image: layers-awx-receptor:24.6.1
+    hostname: awx-task
+    privileged: true                        # podman imbriqué : cgroups et montages
+    volumes:
+      - ./config/receptor.conf:/etc/receptor-default.conf:ro
+      - receptor_config:/etc/receptor
+      - receptor_socket:/var/run/receptor
+      - projects:/var/lib/awx/projects
+      - podman_storage:/var/lib/containers  # les images des EE, hors de la couche du conteneur
+    depends_on:
+      perms: {condition: service_completed_successfully}
+
+volumes:
+  pg_data:
+  redis_socket:
+  receptor_socket:
+  receptor_config:
+  projects:
+  podman_storage:

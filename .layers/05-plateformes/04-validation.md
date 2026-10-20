@@ -5,8 +5,8 @@ description: "Valider le chapitre, que vous ayez fait le cas pratique ou non"
 
 ## Quiz du chapitre
 
-Ce quiz valide le chapitre. Il ne demande pas d'avoir réalisé le cas pratique : tout ce qu'il
-interroge est expliqué dans la présentation, ou visible sur les captures de l'étape précédente.
+Ce quiz valide le chapitre. Il ne demande d'avoir réalisé aucun des deux cas pratiques : tout ce
+qu'il interroge est expliqué dans la présentation, ou dans le texte et les captures des deux cas.
 
 
 ```quiz
@@ -43,7 +43,7 @@ questions:
     correct: 2
     explanation: |
       Ascender est un dérivé d'AWX, opérateur compris. C'est ce qui rend la migration directe.
-  - prompt: Quels besoins une plateforme comme Ascender ou AAP couvre-t-elle mieux que Semaphore ? (plusieurs réponses)
+  - prompt: Quels besoins une plateforme comme Ascender ou AAP couvre-t-elle de façon plus complète que Semaphore ? (plusieurs réponses)
     answers:
       - "Des droits fins par organisation et par équipe"
       - "L'audit des actions (Activity Stream)"
@@ -53,6 +53,26 @@ questions:
     explanation: |
       Ces plateformes apportent droits, audit et workflows ; en échange, elles demandent un
       cluster (ou l'installeur de l'éditeur) et une base.
+  - prompt: Dans le montage AWX en Docker Compose, pourquoi le conteneur receptor contient-il podman ?
+    answers:
+      - "Pour remplacer Docker Compose"
+      - "Parce qu'hors Kubernetes, AWX lance chaque job dans un conteneur d'execution environment avec podman"
+      - "Pour héberger la base de données"
+      - "Parce que l'interface web en a besoin"
+    correct: 2
+    explanation: |
+      Sur Kubernetes, un job devient un pod ; ailleurs, ansible-runner le démarre dans un conteneur
+      d'EE avec podman. Le receptor joue alors le rôle d'un nœud d'exécution.
+  - prompt: Qu'est-ce qu'un nœud AWX de type hybrid ?
+    answers:
+      - "Un nœud qui pilote les jobs et les exécute aussi"
+      - "Un nœud installé à moitié sur Kubernetes"
+      - "Un nœud de base de données"
+      - "Un nœud réservé à Event-Driven Ansible"
+    correct: 1
+    explanation: |
+      Un nœud control pilote, un nœud execution exécute, un nœud hybrid fait les deux : c'est le
+      cas du service task dans le montage Compose.
   - prompt: Où s'exécute un job lancé depuis Ascender ?
     answers:
       - "Sur votre poste"
