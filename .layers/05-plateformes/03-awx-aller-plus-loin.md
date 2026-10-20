@@ -89,7 +89,7 @@ dans un réglage d'admin : ouvrez **Settings**, puis **Jobs settings**, cliquez 
 ["/var/run/docker.sock"]
 ```
 
-Enregistrez avec **Save**. Ce réglage est puissant, et **global** : tous les jobs de tous les
+Enregistrez avec **Save**. Ce réglage est **dangereux**, et **global** : tous les jobs de tous les
 templates, le Demo compris, accèdent désormais au socket, donc aux droits root sur la machine
 Docker. En entreprise, on ne l'accorde qu'en connaissance de cause ; ici, il disparaît au
 nettoyage, avec la base d'AWX.
