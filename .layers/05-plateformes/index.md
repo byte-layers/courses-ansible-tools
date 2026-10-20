@@ -6,6 +6,7 @@ objectives:
   - Connaître l'état actuel de chaque projet, et ce qu'il implique pour une équipe
   - Expliquer ce qu'apporte Event-Driven Ansible et où il s'intègre
   - Comprendre l'architecture d'AWX en la faisant tourner avec Docker Compose (montage non officiel)
+  - Exploiter AWX en admin : cibles conteneurs, questionnaire, droits d'un opérateur, planning et audit
   - Déployer Ascender sur un cluster minikube avec son opérateur, et y lancer un job
 competencies:
   - Lignée Tower, AWX, automation controller, Ascender
@@ -25,7 +26,7 @@ pratiques, au choix** :
 
 | Cas pratique | Voie | Ce qu'il faut |
 |---|---|---|
-| **AWX en Docker Compose** | non officielle : on démonte AWX service par service pour le comprendre | Docker, 4 Go de mémoire, 5 minutes |
+| **AWX en Docker Compose**, puis **Aller plus loin avec AWX** | non officielle : on démonte AWX service par service, puis on l'exploite en admin sur des conteneurs cibles | Docker, 4 Go de mémoire, 5 minutes, puis 1 h 30 |
 | **Ascender sur minikube** | officielle : l'opérateur Kubernetes, comme en entreprise | minikube, kubectl, helm, 8 Go de mémoire, 15 minutes |
 
 Faites l'un, l'autre ou les deux. Pour celui que vous ne faites pas, lisez l'étape, marquez-la comme

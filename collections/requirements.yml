@@ -1,0 +1,5 @@
+# Collections installées automatiquement par AWX, Ascender ou Semaphore quand ils synchronisent ce
+# dépôt. community.docker fournit le plugin de connexion docker_api, utilisé au chapitre 5.
+collections:
+  - name: community.docker
+    version: 4.8.1

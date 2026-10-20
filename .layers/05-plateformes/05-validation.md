@@ -73,6 +73,26 @@ questions:
     explanation: |
       Un nœud control pilote, un nœud execution exécute, un nœud hybrid fait les deux : c'est le
       cas du service task dans le montage Compose.
+  - prompt: Dans AWX, que permet le rôle Execute donné à un utilisateur sur un template ?
+    answers:
+      - "Lancer le template, sans pouvoir le modifier ni voir le projet ou les identifiants"
+      - "Modifier le template et ses identifiants"
+      - "Administrer toute l'organisation"
+      - "Lire le mot de passe des identifiants utilisés par le template"
+    correct: 1
+    explanation: |
+      Les rôles AWX portent sur un objet précis. Execute donne le lancement, et seulement lui :
+      c'est ainsi qu'on délègue un job sans exposer les secrets.
+  - prompt: Pourquoi faut-il remplir « Paths to expose to isolated jobs » pour viser des conteneurs avec le plugin docker_api ?
+    answers:
+      - "Parce que chaque job tourne dans son propre conteneur, qui ne voit pas le socket Docker de l'hôte sans ce réglage"
+      - "Pour installer la collection community.docker"
+      - "Pour ouvrir le port SSH des cibles"
+      - "Pour donner les droits Execute à l'opérateur"
+    correct: 1
+    explanation: |
+      Le conteneur du job est isolé. Ce réglage d'admin y monte des chemins de l'hôte, ici le
+      socket de Docker ; il donne des droits root sur Docker, à n'accorder qu'en connaissance de cause.
   - prompt: Où s'exécute un job lancé depuis Ascender ?
     answers:
       - "Sur votre poste"

@@ -130,6 +130,7 @@ services:
       - receptor_socket:/var/run/receptor
       - projects:/var/lib/awx/projects
       - podman_storage:/var/lib/containers  # les images des EE, hors de la couche du conteneur
+      - /var/run/docker.sock:/var/run/docker.sock  # le Docker de l'hôte : cibles conteneurs (étape « Aller plus loin »)
     depends_on:
       perms: {condition: service_completed_successfully}
 

@@ -1,0 +1,13 @@
+# Configure les conteneurs cibles du chapitre 5, joints par l'API Docker (plugin docker_api).
+# La variable « message » vient du questionnaire (survey) du template ; sinon, la valeur par défaut.
+- name: Configurer les cibles conteneurs
+  hosts: cibles
+  gather_facts: false
+  vars:
+    message: "Configuré par AWX"
+  tasks:
+    - name: Déposer le fichier de configuration
+      ansible.builtin.copy:
+        content: "{{ message }}\n"
+        dest: /etc/motd-awx
+        mode: "0644"

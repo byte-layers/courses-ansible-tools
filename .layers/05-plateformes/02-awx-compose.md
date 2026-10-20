@@ -79,6 +79,8 @@ Son script de démarrage,
 [start-receptor.sh](https://github.com/byte-layers/courses-ansible-tools/blob/main/lab/awx/receptor/start-receptor.sh),
 prépare les cgroups pour podman, et génère au premier démarrage les certificats et la clé de
 signature des jobs que l'opérateur rangerait dans des secrets Kubernetes.
+Le receptor monte enfin le socket de Docker, `/var/run/docker.sock` : il ne sert qu'à l'étape
+suivante, pour viser des conteneurs comme au cours « premiers pas ».
 
 Les fichiers de configuration, dans
 [lab/awx/config/](https://github.com/byte-layers/courses-ansible-tools/tree/main/lab/awx/config),
@@ -254,26 +256,12 @@ son installeur.
 > sans fichier `.env`. Ce qui limite le risque : l'interface n'est publiée que sur `127.0.0.1`, et
 > tout disparaît au nettoyage. Rien de cela ne doit sortir d'un poste de formation.
 
-## Nettoyer
+## La suite
 
-Arrêtez AWX et supprimez ses volumes : base, projets, images d'EE téléchargées par podman. L'image
-`layers-awx-receptor:24.6.1` construite plus haut est retirée aussi. Les images téléchargées par
-Docker (`quay.io/ansible/awx`, `postgres`, `redis`, `awx-ee`) restent sur votre poste ; retirez-les
-avec `docker image rm` si vous voulez récupérer la place.
+Gardez AWX allumé : l'étape suivante, « Aller plus loin avec AWX », s'en sert et se termine par le
+nettoyage. Si vous vous arrêtez ici, arrêtez AWX et supprimez ses volumes avec
+`docker compose -f atelier/awx/compose.yml -p layers-awx down -v`.
 
-```exec
-label: Arrêter AWX
----
-docker compose -f atelier/awx/compose.yml -p layers-awx down -v
-docker image rm layers-awx-receptor:24.6.1 || true
-```
-
-```verify
-if docker ps -a --format '{{.Names}}' | grep -q '^layers-awx-'; then
-  echo "des conteneurs layers-awx-* existent encore : lancez le bloc ci-dessus"; exit 1
-fi
-if docker volume ls -q | grep -q '^layers-awx_'; then
-  echo "des volumes layers-awx_* existent encore : l'arrêt doit se faire avec down -v"; exit 1
-fi
-echo "AWX arrêté, volumes supprimés"
+```acknowledge
+AWX tourne, j'ai lancé au moins un job
 ```
