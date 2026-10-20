@@ -1,12 +1,15 @@
 ---
 title: "Aller plus loin avec AWX"
-description: "En 1 h 30 : ce qu'un admin sys doit savoir, puis des conteneurs en cible, un questionnaire, un opérateur aux droits limités, un planning et l'audit"
+description: "Passer de l'utilisation à l'administration d'AWX : les points clés à connaître, puis quatre exercices sur les conteneurs du lab"
 ---
 
 ## Le programme
 
-Cette étape prolonge la précédente, sur le **même AWX**, toujours allumé. Elle dure environ
-**1 h 30** :
+Lancer un job, vous savez le faire. Cette étape vous fait passer de l'autre côté : celui de
+l'**administrateur**, qui décide qui peut lancer quoi, sur quelles machines, quand, et qui garde la
+trace de tout. Elle prolonge l'étape précédente sur le **même AWX**, toujours allumé, et dure
+environ **1 h 30** : un court résumé de ce qu'un admin sys doit connaître, puis quatre exercices
+sur les conteneurs du lab.
 
 | Partie | Durée | Ce que vous faites |
 |---|---|---|
