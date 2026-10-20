@@ -17,7 +17,7 @@ description: "AWX 24.6.1 sans Kubernetes, démonté service par service : un mon
 > | Téléchargements | environ 2 Go d'images |
 > | Durée | 3 à 5 minutes |
 >
-> C'est l'alternative légère au cas pratique Ascender de l'étape suivante, qui lui suit la voie
+> C'est l'alternative légère au cas pratique Ascender, deux étapes plus loin, qui suit la voie
 > officielle, sur Kubernetes. Faites l'un, l'autre, ou les deux.
 
 Si vous ne faites pas ce cas pratique, lisez-le, marquez l'étape comme terminée dans le sommaire, et
@@ -202,15 +202,15 @@ Le job reste longtemps en *Pending* ou *Waiting* : le receptor télécharge l'im
 
 Refaites maintenant avec le playbook du cours ce que vous avez fait dans Semaphore : un projet, un
 inventaire, un template. Les objets et les champs sont les mêmes que dans Ascender, puisque c'est le
-même logiciel, et l'étape suivante les détaille avec des tableaux :
+même logiciel, et l'étape Ascender les détaille avec des tableaux :
 
-1. **Projects > Add** : `courses-ansible-tools`, organisation `Default`, type `Git`, URL
+1. **Resources > Projects > Add** : `courses-ansible-tools`, organisation `Default`, type `Git`, URL
    `https://github.com/byte-layers/courses-ansible-tools.git`, et dans le champ
    *Source Control Branch/Tag/Commit* le tag `v1` ; enregistrez, puis attendez que le statut du
    projet passe à **Successful** : la liste des playbooks n'existe qu'après cette synchronisation ;
-2. **Inventories > Add > Add inventory** : `local`, organisation `Default`, puis l'hôte `localhost`
+2. **Resources > Inventories > Add > Add inventory** : `local`, organisation `Default`, puis l'hôte `localhost`
    avec la variable `ansible_connection: local` ;
-3. **Templates > Add > Add job template** : `Réconcilier`, inventaire `local`, projet
+3. **Resources > Templates > Add > Add job template** : `Réconcilier`, inventaire `local`, projet
    `courses-ansible-tools`, playbook `lab/semaphore/demo-repo/site.yml`.
 
 Lancez le template. Ici, `localhost` est le conteneur d'EE démarré par podman pour ce job : le
@@ -245,7 +245,7 @@ ils racontent pourquoi AWX a choisi Kubernetes.
 | comment un job devient un conteneur d'EE | l'isolation propre : le receptor est **privilégié** |
 | les objets et l'API, identiques à AWX sur Kubernetes | les mises à jour : rien n'automatise le passage à une autre version |
 
-En production, il vaut mieux l'opérateur AWX sur un cluster, Ascender (étape suivante), ou AAP avec
+En production, il vaut mieux l'opérateur AWX sur un cluster, Ascender (son étape suit), ou AAP avec
 son installeur.
 
 > **⚠️ Les raccourcis de sécurité de ce montage.** Le receptor est **privilégié**, ce qui revient à

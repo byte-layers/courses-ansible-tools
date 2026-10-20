@@ -6,7 +6,8 @@ description: "Valider le chapitre, que vous ayez fait le cas pratique ou non"
 ## Quiz du chapitre
 
 Ce quiz valide le chapitre. Il ne demande d'avoir réalisé aucun des deux cas pratiques : tout ce
-qu'il interroge est expliqué dans la présentation, ou dans le texte et les captures des deux cas.
+qu'il interroge est expliqué dans la présentation, ou dans le texte et les captures des étapes AWX et
+Ascender.
 
 
 ```quiz
@@ -75,7 +76,7 @@ questions:
       cas du service task dans le montage Compose.
   - prompt: Dans AWX, que permet le rôle Execute donné à un utilisateur sur un template ?
     answers:
-      - "Lancer le template, sans pouvoir le modifier ni voir le projet ou les identifiants"
+      - "Lancer le template, sans pouvoir le modifier, ni ouvrir le projet, l'inventaire ou les identifiants"
       - "Modifier le template et ses identifiants"
       - "Administrer toute l'organisation"
       - "Lire le mot de passe des identifiants utilisés par le template"
